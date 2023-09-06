@@ -5,6 +5,7 @@ import com.theokanning.openai.completion.CompletionRequest;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.service.OpenAiService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -19,11 +20,16 @@ public class ChatGPTController {
     String gptkey;
 
     @PostMapping("/chat")
-    public String getChatMessages(@RequestBody chatGPTMessagePrompt prompt) {
+    public ResponseEntity<?> getChatMessages(@RequestBody chatGPTMessagePrompt prompt) {
 
-        OpenAiService service = new OpenAiService(gptkey);
-        ChatCompletionRequest completionRequest = ChatCompletionRequest.builder().messages(prompt.getPromptMessages())
-                .model("gpt-3.5-turbo-16k").build();
-        return service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent();
+        try{
+            OpenAiService service = new OpenAiService(gptkey);
+            ChatCompletionRequest completionRequest = ChatCompletionRequest.builder().messages(prompt.getPromptMessages())
+                    .model("gpt-3.5-turbo-16k").build();
+            String results= service.createChatCompletion(completionRequest).getChoices().get(0).getMessage().getContent();
+            return ResponseEntity.ok(results);
+        }catch (Exception e){
+            return ResponseEntity.ok("some Error occured");
+        }
     }
 }
