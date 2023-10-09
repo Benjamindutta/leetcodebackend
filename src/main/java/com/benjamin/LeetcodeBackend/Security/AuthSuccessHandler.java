@@ -29,7 +29,7 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Autowired
     private UserService userService;
 
-    private String redirectUri="http://localhost:3000/authorized";
+    private String redirectUri="https://d3z7trp5yfglj.cloudfront.net/authorized";
     @Autowired
     private TokenProvider tokenProvider;
 
