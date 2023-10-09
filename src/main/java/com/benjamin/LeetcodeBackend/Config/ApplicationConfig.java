@@ -33,23 +33,23 @@ public class ApplicationConfig {
 //    @Autowired
 ////    private ConfigurableEnvironment environment;
 
-    @Bean
-    public void customizeProperties() {
-
-
-//        MutablePropertySources propertySources = environment.getPropertySources();
-        AwsSecrets a=getSecret();
-        System.setProperty("gpt.my.api", a.getChatgptkey());
-        System.setProperty("youtube.my.key",a.getYoutube_key());
-//        // Define your custom properties programmatically
-//        Properties customProperties = new Properties();
-//        customProperties.setProperty("gpt.my.api", a.getChatgptkey());
-//        customProperties.setProperty("youtube.my.key",a.getYoutube_key());
+//    @Bean
+//    public void customizeProperties() {
 //
-//        // Add your custom properties to the environment
-//        PropertiesPropertySource propertySource = new PropertiesPropertySource("customProperties", customProperties);
-//        propertySources.addFirst(propertySource);
-    }
+//
+////        MutablePropertySources propertySources = environment.getPropertySources();
+////        AwsSecrets a=getSecret();
+////        System.setProperty("gpt.my.api", a.getChatgptkey());
+////        System.setProperty("youtube.my.key",a.getYoutube_key());
+////        // Define your custom properties programmatically
+////        Properties customProperties = new Properties();
+////        customProperties.setProperty("gpt.my.api", a.getChatgptkey());
+////        customProperties.setProperty("youtube.my.key",a.getYoutube_key());
+////
+////        // Add your custom properties to the environment
+////        PropertiesPropertySource propertySource = new PropertiesPropertySource("customProperties", customProperties);
+////        propertySources.addFirst(propertySource);
+//    }
 
     @Bean
     public MongoClient mongoConfig(){
