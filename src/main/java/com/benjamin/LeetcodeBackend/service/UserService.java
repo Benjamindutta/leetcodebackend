@@ -30,10 +30,21 @@ public class UserService {
 		return userrepo.findById(id);
 	}
 	public Set<Question> getAllSolvedQuestionByUserName(String username){
-		return userrepo.findByUserNameIncludeQuestionSolved(username).getQuestionsSolved();
+		return userrepo.findByUserNameIncludeQuestionSolved(username).orElse(new User()).getQuestionsSolved();
 	}
 
 	public Set<Question> getAllRevisionQuestionByUser(String username) {
-		return userrepo.findByUserNameIncludeQuestionRevison(username).getQuestionsToRevised();
+		return userrepo.findByUserNameIncludeQuestionRevison(username).orElse(new User()).getQuestionsToRevised();
+	}
+	public User getUserbyUsername(String username){
+		return userrepo.findByUsername(username);
+	}
+
+	public String getLeetcodeByUsername(String username){
+		return userrepo.findByUsername(username).getLeetcodeUsername();
+	}
+
+	public User getUserbyLeetcodeNmae(String leetcodeUsername){
+		return userrepo.findByLeetcodeUsername(leetcodeUsername).orElse(new User());
 	}
 }

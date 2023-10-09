@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.benjamin.LeetcodeBackend.collection.Question;
 import com.benjamin.LeetcodeBackend.dto.QuestionDto;
+import com.benjamin.LeetcodeBackend.dto.UsernameDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -66,7 +67,7 @@ public class UserController {
 	@PostMapping("addrevisedquestion/{userId}")
 	public ResponseEntity<?> addRevisedQuestion(@PathVariable String userId,@RequestBody Question question){
 		try{
-			User user=userService.getUserByid(userId).orElse(new User());
+			User user=userService.getUserbyUsername(userId);
 			if(user.getUsername()==null){
 
 				return ResponseEntity.ok("user Not found!!!!!!!!");
@@ -91,20 +92,14 @@ public class UserController {
 		question.setUrl(questionDto.getUrl());
 		question.setDifficulty(questionDto.getQuestionDifficulty());
 		question.setTitle(questionDto.getQuestionTitleString());
-		System.out.println(question);
+//		System.out.println(question);
 
 
 		try{
-			User user =userService.getUserByid(questionDto.getUserName()).orElse(new User());
+			User user =userService.getUserbyLeetcodeNmae(questionDto.getUserName());
 //		System.out.println(user);
 			if(user.getUsername()==null) {
-				user.setUsername(questionDto.getUserName());
-				Set<Question> solvedQuestions=new HashSet<>();
-				Set<Question> questionsToRevised=new HashSet<>();
-				solvedQuestions.add(question);
-				user.setQuestionsSolved(solvedQuestions);
-				user.setQuestionsToRevised(questionsToRevised);
-
+				return ResponseEntity.ok("User not logged in");
 			}else{
 				Set<Question> solvedQuestions=user.getQuestionsSolved();
 				Long count=solvedQuestions.stream().filter(q->q.getId().equals(question.getId())).count();
@@ -114,16 +109,40 @@ public class UserController {
 				}else{
 					solvedQuestions.add(question);
 					user.setQuestionsSolved(solvedQuestions);
+					userService.save(user);
 				}
 
 			}
-			userService.save(user);
+
 			return ResponseEntity.ok("Submitted successfully");
 
 		}catch (Exception e){
 			return ResponseEntity.ok("Some error occured");
 		}
 	}
+
+
+	@GetMapping("/leetcode/{username}")
+	public String getLeetcodeUsername(@PathVariable String username){
+		try{
+			return userService.getLeetcodeByUsername(username);
+		}catch (Exception e){
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+
+	@PutMapping("/updateLeetcodeuser/{username}")
+	public User updateLeetcodeusername(@PathVariable String username, @RequestBody UsernameDto usernameDto) throws Exception {
+		try {
+			User user=userService.getUserbyUsername(usernameDto.getUsername());
+			user.setLeetcodeUsername(usernameDto.getLeetcodeUsername());
+			return userService.save(user);
+		}catch (Exception e){
+			throw new Exception(e.getMessage());
+		}
+
+	}
+
 
 
 }
