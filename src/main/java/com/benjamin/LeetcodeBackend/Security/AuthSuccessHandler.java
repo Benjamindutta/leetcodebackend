@@ -11,9 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -29,7 +26,7 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Autowired
     private UserService userService;
 
-    private String redirectUri="https://d3z7trp5yfglj.cloudfront.net/authorized";
+    private String redirectUri="http://leetcodrz.benjamindutta.online.s3-website.ap-south-1.amazonaws.com/authorized";
     @Autowired
     private TokenProvider tokenProvider;
 
