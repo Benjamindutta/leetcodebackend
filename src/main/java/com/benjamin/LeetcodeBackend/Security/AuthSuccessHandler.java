@@ -26,7 +26,7 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Autowired
     private UserService userService;
 
-    private String redirectUri="http://leetcodrz.benjamindutta.online.s3-website.ap-south-1.amazonaws.com/authorized";
+    private String redirectUri="https://leetcode-frontend-tracker.vercel.app/authorized";
     @Autowired
     private TokenProvider tokenProvider;
 
