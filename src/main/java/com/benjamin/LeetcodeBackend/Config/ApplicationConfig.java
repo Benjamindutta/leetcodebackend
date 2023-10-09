@@ -3,26 +3,20 @@ package com.benjamin.LeetcodeBackend.Config;
 
 import com.benjamin.LeetcodeBackend.dto.AwsSecrets;
 import com.google.gson.Gson;
-import com.mongodb.ClientSessionOptions;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.*;
-import com.mongodb.connection.ClusterDescription;
-import org.bson.Document;
-import org.bson.conversions.Bson;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.MutablePropertySources;
-import org.springframework.core.env.PropertiesPropertySource;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
-import java.util.List;
-import java.util.Properties;
 
 @Configuration
 public class ApplicationConfig {
@@ -64,6 +58,42 @@ public class ApplicationConfig {
         // Create and return the MongoClient
         return MongoClients.create(settings);
 
+    }
+
+    @Bean
+    public ClientRegistrationRepository clientRegistrationRepository() {
+        return new InMemoryClientRegistrationRepository(this.githubClientRegistration());
+    }
+
+    public ClientRegistration githubClientRegistration() {
+        AwsSecrets awsSecrets=getSecret();
+        return ClientRegistration.withRegistrationId("github")
+                .clientId(awsSecrets.getGithubClientId())
+                .clientSecret(awsSecrets.getGithubClientSecret())
+                .clientName("GitHub")
+                .scope("user:email,read:org")
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
+                .authorizationUri("https://github.com/login/oauth/authorize")
+                .tokenUri("https://github.com/login/oauth/access_token")
+                .userInfoUri("https://api.github.com/user")
+                .userNameAttributeName("id")
+                .build();
+
+//        return ClientRegistration.withRegistrationId("google")
+//                .clientId("google-client-id")
+//                .clientSecret("google-client-secret")
+//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+//                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+//                .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
+//                .scope("openid", "profile", "email", "address", "phone")
+//                .authorizationUri("https://accounts.google.com/o/oauth2/v2/auth")
+//                .tokenUri("https://www.googleapis.com/oauth2/v4/token")
+//                .userInfoUri("https://www.googleapis.com/oauth2/v3/userinfo")
+//                .userNameAttributeName(IdTokenClaimNames.SUB)
+//                .jwkSetUri("https://www.googleapis.com/oauth2/v3/certs")
+//                .clientName("Google")
+//                .build();
     }
 
 
