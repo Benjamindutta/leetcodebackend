@@ -39,7 +39,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeHttpRequests((auth)-> auth.requestMatchers("/oauth2/authorization/**","/api/chatgpt/chat").permitAll()
+                .authorizeHttpRequests((auth)-> auth.requestMatchers("/oauth2/authorization/**").permitAll()
                                                     .anyRequest().authenticated())
                 .oauth2Login(Oauth->Oauth.successHandler(authSuccessHandler))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
